@@ -1,4 +1,4 @@
-package main
+package websocket
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type Hub struct {
 	unregister chan *Client
 }
 
-func newHub() *Hub {
+func NewHub() *Hub {
 	return &Hub{
 		clients:    make(map[*Client]bool),
 		broadcast:  make(chan []byte),
@@ -28,7 +28,7 @@ func newHub() *Hub {
 	}
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
@@ -41,11 +41,10 @@ func (h *Hub) run() {
 				close(client.send)
 			}
 		case message := <-h.broadcast:
-			fmt.Printf("reading a message from broadcast: %s\n", message)
+			// fmt.Printf("reading a message from broadcast: %s\n", message)
 			for client := range h.clients {
 				select {
 				case client.send <- message:
-
 					msgType, err := GetMessageType(message)
 					if err != nil {
 						log.Printf("failed to parse message %s: %v\n", message, err)
@@ -60,7 +59,7 @@ func (h *Hub) run() {
 
 					}
 
-					fmt.Printf("Sending message %s to client %+v\n", message, client)
+					// fmt.Printf("Sending message %s to client %+v\n", message, client)
 				default:
 					fmt.Printf("closing send channel for client %+v\n", client)
 					close(client.send)

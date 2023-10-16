@@ -1,0 +1,23 @@
+{{ define "content" }}
+
+<div id="add-new-item-form">
+    <input type="text" id="new-item-name" />
+    <button type="button" onclick="handleAddNewItem();">
+        +
+    </button>
+    <div id="auto-complete" class="hide">
+        <ul id="favorites">
+            <li>Favo</li>
+            <li>Rites</li>
+        </ul>
+    </div>
+</div>
+
+<div id="shopping-list">
+    <ul id="sortable-list" class="sortable-list">
+
+    </ul>
+    <div id="item-clip" class="item item-clip hide">Foo</div>
+</div>
+
+{{ end }}

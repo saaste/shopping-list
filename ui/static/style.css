@@ -1,0 +1,129 @@
+body {
+    color: #bbb;
+    background-color: #000;
+    padding: 1em;
+}
+
+#container {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+@media only screen and (min-width: 1024px) {
+    #container {
+        width: 600px;
+    }
+}
+
+#add-new-item-form {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    position: relative;
+}
+#add-new-item-form input {
+    flex-grow: 1;
+    border: 2px solid #8e89aa;
+    border-radius: 10px;
+    padding: 0.5em;
+    background-color: #444250;
+    color:#d0cbeb
+}
+#add-new-item-form button {
+    font-weight: bold;
+    font-size: 2em;
+    border: 2px solid #8e89aa;
+    border-radius: 10px;
+    background-color: #444250;
+    color:#d0cbeb
+}
+
+#auto-complete {
+ position: absolute;
+ top: 3.5em;
+ left: 0;
+ width: 100%;
+ max-height: 30vh;
+ overflow-y: scroll;
+ border: 1px solid #444250;
+ border-radius: 10px;
+ background-color: rgba(0, 0, 0, .8);
+ backdrop-filter: blur(5px);
+ box-shadow: 0 10px 10px 0px #000;
+ z-index: 100;
+}
+
+#auto-complete ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#auto-complete li {
+    padding: 0.5em;
+    margin-bottom: 0.2em;
+    border-radius: 10px;
+}
+
+#auto-complete li:hover {
+    background-color: rgba(50, 50, 50, 0.2);
+}
+
+
+#sortable-list {
+    list-style-type: none;
+    padding: 0;
+}
+#sortable-list li {
+    padding: 0.5em;
+    background-color: #302d41;
+    border: 1px solid #524a7e;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5em;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: fff;
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.1em solid currentColor;
+    border-radius: 0.25em;
+    transform: translateY(0.18em);
+
+    display: grid;
+    place-content: center;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em rgb(216, 165, 55);
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+}
+
+.delete {
+    margin-right: 2em;
+}
+
+.svg-circleplus { height: 40px; stroke: red; }

@@ -6,25 +6,30 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
+	"text/template"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/gorilla/websocket"
+
+	"github.com/saaste/shopping-list/websocket"
 )
 
 func main() {
 	port := flag.String("port", "8000", "Port")
 	flag.Parse()
 
-	hub := newHub()
-	go hub.run()
+	hub := websocket.NewHub()
+	go hub.Run()
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", handleRoot)
 	r.Get("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+		websocket.ServeWs(hub, w, r)
 	})
+
+	fileServer(r, "/static", http.Dir("ui/static"))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", *port), r)
 	if errors.Is(err, http.ErrServerClosed) {
@@ -35,45 +40,34 @@ func main() {
 }
 
 func handleRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Fooo")
+	t, err := template.ParseFiles("ui/templates/base.html", "ui/templates/home.html")
+	if err != nil {
+		log.Printf("Failed to parse album templates: %s", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
+	err = t.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		log.Printf("Failed to execute album template: %s", err)
+		http.Error(w, "Internal Server Error", 500)
+
+	}
 }
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+func fileServer(r chi.Router, path string, root http.FileSystem) {
+	if strings.ContainsAny(path, "{}*") {
+		panic("FileServer does not permit any URL parameters.")
+	}
+
+	if path != "/" && path[len(path)-1] != '/' {
+		r.Get(path, http.RedirectHandler(path+"/", http.StatusMovedPermanently).ServeHTTP)
+		path += "/"
+	}
+	path += "*"
+
+	r.Get(path, func(w http.ResponseWriter, r *http.Request) {
+		rctx := chi.RouteContext(r.Context())
+		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
+		fs := http.StripPrefix(pathPrefix, http.FileServer(root))
+		fs.ServeHTTP(w, r)
+	})
 }
-
-// func handleWebSocket(w http.ResponseWriter, r *http.Request) {
-// 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
-
-// 	ws, err := upgrader.Upgrade(w, r, nil)
-// 	if err != nil {
-// 		log.Printf("failed to upgrade web socket connection: %v\n", err)
-// 	}
-
-// 	log.Println("Client connected")
-
-// 	err = ws.WriteMessage(1, []byte("Oh hai, client!"))
-// 	if err != nil {
-// 		log.Printf("failed to write message: %v\n", err)
-// 	}
-
-// 	reader(ws)
-// }
-
-// func reader(conn *websocket.Conn) {
-// 	for {
-// 		messageType, p, err := conn.ReadMessage()
-// 		if err != nil {
-// 			log.Printf("failed to read the message: %v\n", err)
-// 			return
-// 		}
-
-// 		log.Printf("message: %s, %d", string(p), messageType)
-
-// 		if err := conn.WriteMessage(messageType, p); err != nil {
-// 			log.Printf("failed to write a message: %v\n", err)
-// 			return
-// 		}
-// 	}
-// }

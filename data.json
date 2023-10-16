@@ -1,0 +1,39 @@
+{
+ "items": [
+  {
+   "id": "c0ef55d4-a39c-40cf-9abb-932a91fbe5dd",
+   "checked": false,
+   "name": "Foo2"
+  },
+  {
+   "id": "ddb99e88-63e6-418a-8803-0727d8fc89e8",
+   "checked": false,
+   "name": "kljlkllklk"
+  },
+  {
+   "id": "26b65360-640c-45a7-9bee-a1c8de76bfaf",
+   "checked": false,
+   "name": "Bar"
+  },
+  {
+   "id": "67766ee8-9529-4698-82f8-03fb25d0f5b7",
+   "checked": false,
+   "name": "Third"
+  },
+  {
+   "id": "fdbe5b7a-51a0-416e-a55d-4f67d31a6015",
+   "checked": false,
+   "name": "sdfsdfsdf"
+  },
+  {
+   "id": "d7ffa692-1e1e-40e0-a3c2-cc14f24d1447",
+   "checked": false,
+   "name": "aaaaa"
+  },
+  {
+   "id": "9cc11fce-8b2b-46a6-b2c1-4c1afdd6bc80",
+   "checked": false,
+   "name": "Foo"
+  }
+ ]
+}
