@@ -1,39 +1,49 @@
 {
- "items": [
-  {
-   "id": "c0ef55d4-a39c-40cf-9abb-932a91fbe5dd",
-   "checked": false,
-   "name": "Foo2"
-  },
-  {
-   "id": "ddb99e88-63e6-418a-8803-0727d8fc89e8",
-   "checked": false,
-   "name": "kljlkllklk"
-  },
-  {
-   "id": "26b65360-640c-45a7-9bee-a1c8de76bfaf",
-   "checked": false,
-   "name": "Bar"
-  },
-  {
-   "id": "67766ee8-9529-4698-82f8-03fb25d0f5b7",
-   "checked": false,
-   "name": "Third"
-  },
-  {
-   "id": "fdbe5b7a-51a0-416e-a55d-4f67d31a6015",
-   "checked": false,
-   "name": "sdfsdfsdf"
-  },
-  {
-   "id": "d7ffa692-1e1e-40e0-a3c2-cc14f24d1447",
-   "checked": false,
-   "name": "aaaaa"
-  },
-  {
-   "id": "9cc11fce-8b2b-46a6-b2c1-4c1afdd6bc80",
-   "checked": false,
-   "name": "Foo"
+ "shopping_list": {
+  "items": [
+   {
+    "id": "6bc8ffd5-a711-4001-8bb9-e3318295910b",
+    "checked": true,
+    "name": "Juusto"
+   },
+   {
+    "id": "0989b3fd-b37d-4818-b6c7-d3045edfee52",
+    "checked": true,
+    "name": "Maito"
+   },
+   {
+    "id": "e8d80269-0ad6-485e-b5e7-6bb904c34193",
+    "checked": true,
+    "name": "Kurkku"
+   },
+   {
+    "id": "3425bb76-df3e-4eb4-9bfb-f2f426569601",
+    "checked": true,
+    "name": "Leipä"
+   },
+   {
+    "id": "19a90ece-2b10-448e-8c2c-ff83f5cef403",
+    "checked": true,
+    "name": "Margariini"
+   },
+   {
+    "id": "c81610c7-77e2-4fdd-80e5-674f8f9673c6",
+    "checked": true,
+    "name": "Sipsejä"
+   }
+  ]
+ },
+ "favorites": {
+  "favorites": {
+   "Jdjdjdjdjdjdjdidiidudududududuudududufudufididikfjfu": 1,
+   "Jfkrjrr f e r frreiejudueueueuue rjfjfudjdjdiud jdjdjejejejdjfjd fjdjfjd": 1,
+   "Juusto": 1,
+   "Kalkkunaleike": 3,
+   "Kurkku": 2,
+   "Leipä": 2,
+   "Maito": 1,
+   "Margariini": 1,
+   "Sipsejä": 5
   }
- ]
+ }
 }

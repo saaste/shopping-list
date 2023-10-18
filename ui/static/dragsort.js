@@ -1,10 +1,13 @@
-var listElements;
-var targetEl;
-var wrapper;
-var itemClip;
-var scopeObj;
+import { getItemById } from "./app.js";
+import { sendSortItemsEvent } from "./websocket.js";
 
-const initializeDragSort = () => {
+let listElements;
+let targetEl;
+let wrapper;
+let itemClip;
+let scopeObj;
+
+export const initializeDragSort = () => {
     listElements = document.querySelectorAll(".sortable-list .item");
     wrapper = document.getElementById("sortable-list");
     itemClip = document.getElementById("item-clip");
@@ -104,14 +107,14 @@ const defineScope = (elementArray) => {
 };
 
 const sendSortedEvent = () => {
-    const sortedItemList = []
-    for (let i = 0; i < sortableList.childElementCount; i++) {
-        const el = sortableList.children.item(i);
+    const sortedItems = []
+    for (let i = 0; i < wrapper.childElementCount; i++) {
+        const el = wrapper.children.item(i);
         if (el.getAttribute("draggable") === "true") {
             const itemId = el.getAttribute("data-item-id");
-            const item = idToItemMap.get(itemId);
-            sortedItemList.push(item)
+            const item = getItemById(itemId);
+            sortedItems.push(item)
         }
     }
-    socket.send(JSON.stringify({ "type": "SORT_ITEMS", "items": sortedItemList }));
+    sendSortItemsEvent(sortedItems);
 }

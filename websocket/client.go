@@ -272,7 +272,7 @@ func (c *Client) handleSetItemStatusMessage(message []byte) error {
 
 	response := Response{
 		Type: ResponseTypeListUpdated,
-		Body: appData.Favorites,
+		Body: appData.ShoppingList,
 	}
 
 	c.hub.broadcast <- []byte(response.ToJson())
