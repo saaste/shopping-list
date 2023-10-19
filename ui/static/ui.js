@@ -108,13 +108,21 @@ export const createListItem = (item) => {
         checkbox.setAttribute("checked", "checked");
     }
 
-    const trashImg = document.createElement("img");
-    trashImg.setAttribute("src", "/static/trash-can-white.png");
-    trashImg.setAttribute("alt", "Remove")
-    trashImg.classList.add("delete");
+    const trashImg = document.createElement("div");
+    trashImg.setAttribute("alt", "Remove");
+    trashImg.classList.add("delete-item");
     trashImg.addEventListener("click", () => {
         handleRemoveItem(item.id);
-    })
+    });
+
+
+    // const trashImg = document.createElement("img");
+    // trashImg.setAttribute("src", "/static/trash-can-white.png");
+    // trashImg.setAttribute("alt", "Remove")
+    // trashImg.classList.add("delete");
+    // trashImg.addEventListener("click", () => {
+    //     handleRemoveItem(item.id);
+    // });
 
     let li = document.createElement("li");
     li.setAttribute("draggable", "true")
@@ -141,7 +149,6 @@ export const createListItem = (item) => {
 
     li.appendChild(checkbox);
     li.appendChild(label);
-    // li.appendChild(a);
     li.appendChild(trashImg);
 
     return li;

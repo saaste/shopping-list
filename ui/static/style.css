@@ -4,6 +4,14 @@ body {
     padding: 1em;
 }
 
+@media (prefers-color-scheme: light) {
+    body {
+        color: #4444;
+        background-color: #fff;
+        padding: 1em;
+    }
+}
+
 #container {
     margin: 0 auto;
     width: 100%;
@@ -24,19 +32,37 @@ body {
 }
 #add-new-item-form input {
     flex-grow: 1;
-    border: 2px solid #8e89aa;
+    border: 2px solid #aa9d89;
     border-radius: 10px;
     padding: 0.5em;
-    background-color: #444250;
-    color:#d0cbeb
+    background-color: #504a42;
+    color:#ebddcb
 }
+
+@media (prefers-color-scheme: light) {
+    #add-new-item-form input {
+        border: 2px solid #504a42;
+        background-color: #aa9989;
+        color: #2c2a26;
+    }
+}
+
 #add-new-item-form button {
     font-weight: bold;
     font-size: 2em;
-    border: 2px solid #8e89aa;
+    border: 2px solid #aa9d89;
     border-radius: 10px;
-    background-color: #444250;
+    background-color: #504a42;
     color:#d0cbeb
+}
+
+@media (prefers-color-scheme: light) {
+    #add-new-item-form button {
+        border: 2px solid #504a42;
+        background-color: #aa9989;
+        color:#2c2a26
+    }
+    
 }
 
 #auto-complete {
@@ -53,6 +79,15 @@ body {
  box-shadow: 0 10px 10px 0px #000;
  z-index: 100;
 }
+
+@media (prefers-color-scheme: light) {
+    #auto-complete {
+        color: #27262c;
+        border: 1px solid #444250;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+}
+
 
 #auto-complete ul {
     list-style-type: none;
@@ -88,6 +123,7 @@ body {
 }
 #sortable-list li {
     padding: 0.5em;
+    color: #cbbdcf;
     background-color: #302d41;
     border: 1px solid #524a7e;
     border-radius: 10px;
@@ -97,11 +133,26 @@ body {
     gap: 0.5em;
 }
 
+@media (prefers-color-scheme: light) {
+    #sortable-list li {
+        color: #211e22;
+        background-color: #8e89aa;
+        border: 1px solid #302d41;
+    }
+}
+
+
 #sortable-list li.on-drag {
     background-color: #584d68;
     transform: scale(1.05, 1.1);
     opacity: 1;
     box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+}
+
+@media (prefers-color-scheme: light) {
+    #sortable-list li.on-drag {
+        background-color: #6a607c;
+    }
 }
 
 #sortable-list li span {
@@ -137,9 +188,15 @@ input[type="checkbox"]::before {
     height: 0.65em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em rgb(216, 165, 55);
+    box-shadow: inset 1em 1em rgb(55, 216, 68);
     transform-origin: bottom left;
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+@media (prefers-color-scheme: light) {
+    input[type="checkbox"]::before {
+        box-shadow: inset 1em 1em rgb(5, 116, 14);
+    }
 }
 
 input[type="checkbox"]:checked::before {
@@ -150,6 +207,20 @@ input[type="checkbox"]:checked + span {
     text-decoration: line-through;
 }
 
-/* .delete {
-    z-index: 99;
-} */
+.delete-item {
+    width: 1.5em;
+    height: 1.5em;
+    background-image: url("trash-can-white.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+}
+.delete-item:hover {
+    opacity: 0.8;
+}
+
+@media (prefers-color-scheme: light) {
+    .delete-item {
+        background-image: url("trash-can-black.png");
+    }
+}
