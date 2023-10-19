@@ -27,6 +27,10 @@ func (f *Favorites) Update(name string) {
 	f.Favorites[name] = 1
 }
 
+func (f *Favorites) Delete(name string) {
+	delete(f.Favorites, name)
+}
+
 func (f *Favorites) ToSortedList() FavoritesSorted {
 	keys := make([]string, 0, len(f.Favorites))
 	for key := range f.Favorites {

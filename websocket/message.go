@@ -10,12 +10,13 @@ import (
 type MessageType string
 
 const (
-	MessageTypeUnknown       MessageType = "UNKNOWN"
-	MessageTypeInitial       MessageType = "INITIAL"
-	MessageTypeAddItem       MessageType = "ADD_ITEM"
-	MessageTypeRemoveItem    MessageType = "REMOVE_ITEM"
-	MessageTypeSetItemStatus MessageType = "SET_ITEM_STATUS"
-	MessageTypeSortItems     MessageType = "SORT_ITEMS"
+	MessageTypeUnknown        MessageType = "UNKNOWN"
+	MessageTypeInitial        MessageType = "INITIAL"
+	MessageTypeAddItem        MessageType = "ADD_ITEM"
+	MessageTypeRemoveItem     MessageType = "REMOVE_ITEM"
+	MessageTypeSetItemStatus  MessageType = "SET_ITEM_STATUS"
+	MessageTypeSortItems      MessageType = "SORT_ITEMS"
+	MessageTypeRemoveFavorite MessageType = "REMOVE_FAVORITE"
 )
 
 var messageTypes = map[string]MessageType{
@@ -25,6 +26,7 @@ var messageTypes = map[string]MessageType{
 	"REMOVE_ITEM":     MessageTypeRemoveItem,
 	"SET_ITEM_STATUS": MessageTypeSetItemStatus,
 	"SORT_ITEMS":      MessageTypeSortItems,
+	"REMOVE_FAVORITE": MessageTypeRemoveFavorite,
 }
 
 type Message struct {
@@ -50,6 +52,11 @@ type MessageSetItemStatus struct {
 type MessageSortItems struct {
 	Message
 	Items []shopping_list.Item `json:"items"`
+}
+
+type MessageRemoveFavorite struct {
+	Message
+	Name string `json:"name"`
 }
 
 func GetMessageType(byt []byte) (MessageType, error) {
@@ -99,6 +106,16 @@ func ParseMessageSetItemStatus(byt []byte) (*MessageSetItemStatus, error) {
 
 func ParseMessageSortItems(byt []byte) (*MessageSortItems, error) {
 	var message MessageSortItems
+	err := json.Unmarshal(byt, &message)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse JSON message: %w", err)
+	}
+
+	return &message, nil
+}
+
+func ParseMessageRemoveFavorite(byt []byte) (*MessageRemoveFavorite, error) {
+	var message MessageRemoveFavorite
 	err := json.Unmarshal(byt, &message)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON message: %w", err)

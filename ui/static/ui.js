@@ -1,34 +1,42 @@
 import { getFavorites } from "./app.js";
 import { initializeDragSort } from "./dragsort.js";
-import { sendAddItemEvent, sendSetItemStatusEvent, sendRemoveItemEvent } from "./websocket.js";
+import { sendAddItemEvent, sendSetItemStatusEvent, sendRemoveItemEvent, sendRemoveFavoriteEvent } from "./websocket.js";
 
 let autoCompleteEl;
 
 export const initializeUI = () => {
+    const addItemContainer = document.getElementById("add-new-item-form");
     const addInputEl = document.getElementById("new-item-name");
     const addItemButton = document.getElementById("add-item-button");
-    
+
     autoCompleteEl = document.getElementById("auto-complete");
 
-    addInputEl.addEventListener("focus", () => {
-        console.log("focus");
-        redrawFavorites();
-        autoCompleteEl.classList.remove("hide");
+    document.body.addEventListener("click", (e) => {
+        if (e.target === document.body) {
+            hideFavorites();
+        }
     });
 
-    addInputEl.addEventListener("blur", () => {
-        console.log("lost focus");
-        setTimeout(() => {
-            autoCompleteEl.classList.add("hide");
-        }, 200);
+    addItemContainer.addEventListener("focusin", () => {
+        showFavorites();
     });
 
-    addInputEl.addEventListener("keyup", () => {
-        redrawFavorites();
+    addInputEl.addEventListener("keyup", (e) => {
+        console.log(e.code);
+        switch (e.code) {
+            case "Escape":
+                hideFavorites();
+                break;
+            default:
+                showFavorites();
+                redrawFavorites();
+                break;
+        }
     });
 
     addItemButton.addEventListener("click", () => {
         handleAddNewItem();
+        hideFavorites();
     })
 }
 
@@ -39,7 +47,7 @@ const handleAddNewItem = () => {
     if (itemName != "") {
         sendAddItemEvent(itemName);
         input.value = "";
-    }   
+    }
 }
 
 export const redrawFavorites = () => {
@@ -47,13 +55,29 @@ export const redrawFavorites = () => {
     const favoritesEl = document.getElementById("favorites");
     favoritesEl.innerHTML = "";
 
-    const favorites = getFavorites();
+    const favorites = getFavorites().slice(0, 10);
     console.log("Favorites", favorites)
     favorites.forEach((fav) => {
         if (fav.toLowerCase().startsWith(searchQuery)) {
             const li = document.createElement("li");
-            li.addEventListener("click", handleFavoriteClick);
-            li.innerText = fav;
+
+
+            const label = document.createElement("span")
+            label.innerText = fav;
+            label.addEventListener("click", handleFavoriteClick);
+            li.appendChild(label)
+
+            const trashImg = document.createElement("img");
+            trashImg.setAttribute("src", "/static/trash-can-white.png");
+            trashImg.setAttribute("alt", "Remove")
+            trashImg.classList.add("delete");
+            trashImg.addEventListener("click", handleFavoriteDeleteClick)
+            li.appendChild(trashImg)
+
+            // const deleteButton = document.createElement("span")
+            // deleteButton.innerText = "[X]"
+            // deleteButton.addEventListener("click", handleFavoriteDeleteClick);
+            // li.appendChild(deleteButton)
 
             favoritesEl.appendChild(li);
         }
@@ -66,7 +90,7 @@ export const redrawShoppingList = (items) => {
     for (var i = 0; i < items.length; i++) {
         sortableList.appendChild(createListItem(items[i]));
     }
-    
+
     const lastItem = document.createElement("li");
     lastItem.classList.add("item");
     sortableList.appendChild(lastItem);
@@ -83,24 +107,22 @@ export const createListItem = (item) => {
     if (item.checked) {
         checkbox.setAttribute("checked", "checked");
     }
-    
-    let a = document.createElement("a")
-    a.setAttribute("href", "#");
-    a.addEventListener("click", () => {
-        handleRemoveItem(item.id);
-        return false;
-    });
 
     const trashImg = document.createElement("img");
-    trashImg.setAttribute("src", "/static/bin.png");
+    trashImg.setAttribute("src", "/static/trash-can-white.png");
     trashImg.setAttribute("alt", "Remove")
     trashImg.classList.add("delete");
-    a.appendChild(trashImg);
+    trashImg.addEventListener("click", () => {
+        handleRemoveItem(item.id);
+    })
 
     let li = document.createElement("li");
     li.setAttribute("draggable", "true")
     li.setAttribute("data-item-id", item.id);
     li.classList.add("item");
+    li.addEventListener("click", () => {
+        hideFavorites();
+    });
     li.addEventListener("dragstart", () => {
         setTimeout(() => li.classList.add("dragging"), 0);
     });
@@ -119,10 +141,19 @@ export const createListItem = (item) => {
 
     li.appendChild(checkbox);
     li.appendChild(label);
-    li.appendChild(a);
+    // li.appendChild(a);
+    li.appendChild(trashImg);
 
     return li;
 };
+
+const handleToggleCheckbox = (itemId, checked) => {
+    sendSetItemStatusEvent(itemId, checked);
+}
+
+const handleRemoveItem = (itemId) => {
+    sendRemoveItemEvent(itemId);
+}
 
 const handleFavoriteClick = (e) => {
     const value = e.target.innerText;
@@ -131,13 +162,24 @@ const handleFavoriteClick = (e) => {
     addInputEl.value = value;
 
     handleAddNewItem(value);
+    hideFavorites();
 }
 
-const handleToggleCheckbox = (itemId, checked) => {
-    sendSetItemStatusEvent(itemId, checked);
+const handleFavoriteDeleteClick = (e) => {
+    console.log("Deleting favorite");
+    const itemName = e.target.previousSibling.innerText;
+    sendRemoveFavoriteEvent(itemName);
+
+    const addInputEl = document.getElementById("new-item-name");
+    addInputEl.focus();
 }
 
-let handleRemoveItem = (itemId) => {
-    sendRemoveItemEvent(itemId);
+const showFavorites = () => {
+    autoCompleteEl = document.getElementById("auto-complete");
+    autoCompleteEl.classList.remove("hide");
 }
 
+const hideFavorites = () => {
+    autoCompleteEl = document.getElementById("auto-complete");
+    autoCompleteEl.classList.add("hide");
+}

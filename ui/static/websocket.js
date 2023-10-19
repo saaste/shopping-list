@@ -32,6 +32,10 @@ export const sendSortItemsEvent = (sortedItems) => {
     socket.send(JSON.stringify({ "type": "SORT_ITEMS", "items": sortedItems }));
 }
 
+export const sendRemoveFavoriteEvent = (itemName) => {
+    socket.send(JSON.stringify({ "type": "REMOVE_FAVORITE", "name": itemName }));
+}
+
 const handleWsMessage = (wsMessage) => {
     console.log("Message from server", wsMessage)
     const message = JSON.parse(wsMessage)

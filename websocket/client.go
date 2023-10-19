@@ -105,6 +105,11 @@ func (c *Client) readPump() {
 			if err != nil {
 				fmt.Printf("failed to handle SORT_ITEMS message: %v", err) // TODO: Return error response?
 			}
+		case MessageTypeRemoveFavorite:
+			err := c.handleRemoveFavorite(message)
+			if err != nil {
+				fmt.Printf("failed to handle REMOVE_FAVORITE message: %v", err)
+			}
 		default:
 			fmt.Printf("sending message %s to hub's broadcast\n", message)
 			c.hub.broadcast <- []byte("unsupported message")
@@ -298,6 +303,31 @@ func (c *Client) handleSortItemsMessage(message []byte) error {
 		Body: appData.ShoppingList,
 	}
 	c.hub.broadcast <- []byte(response.ToJson())
+	return nil
+}
+
+func (c *Client) handleRemoveFavorite(message []byte) error {
+	msg, err := ParseMessageRemoveFavorite(message)
+	if err != nil {
+		return fmt.Errorf("failed to parse set item status from %s: %w", string(message), err)
+	}
+
+	appData, err := shopping_list.LoadAppData()
+	if err != nil {
+		return fmt.Errorf("failed to get app data: %w", err)
+	}
+
+	appData.Favorites.Delete(msg.Name)
+	shopping_list.SaveAppData(&appData)
+
+	favoritesSorted := appData.Favorites.ToSortedList()
+
+	favoritesUpdatedResponse := Response{
+		Type: ResponseTypeFavoritesUpdated,
+		Body: favoritesSorted,
+	}
+
+	c.hub.broadcast <- []byte(favoritesUpdatedResponse.ToJson())
 	return nil
 }
 
