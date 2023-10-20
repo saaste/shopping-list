@@ -27,3 +27,33 @@ I did not want to use any JavaScript libraries, so everything is implemented usi
 - Light and dark mode
 - Mobile friendly
 - PWA support
+
+## Setup
+To get started, follow these steps:
+1. Clone the respository with
+```
+git clone https://github.com/saaste/shopping-list.git
+```
+2. Copy docker-compose.yml.example ➔ docker-compose.yml
+3. [Optional] Add customer styles to `ui/static/custom.css`.
+
+
+## How to run
+### How to run with Go
+The only requirement is [Go](https://go.dev/). You can start the app with:
+```
+go run . [--port PORT]
+```
+By default the app will run on port 8000.
+
+### Running with Docker
+The only requirement is [Docker](https://www.docker.com/). You can start the app with:
+```
+docker-compose up
+```
+By default, the app listens on port 8000. You can modify the port in the `docker-compose.yaml` file.
+
+## Preview
+![Dark mode](docs/dark-mode.png)
+![Dark mode with favorites](docs/dark-mode-favorites.png)
+![Light mode](docs/light-mode.png)
