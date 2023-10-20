@@ -51,6 +51,7 @@ const handleAddNewItem = () => {
 }
 
 export const redrawFavorites = () => {
+    console.log("Drawing favorites");
     const searchQuery = document.getElementById("new-item-name").value.toLowerCase();
     const favoritesEl = document.getElementById("favorites");
     favoritesEl.innerHTML = "";
@@ -69,6 +70,7 @@ export const redrawFavorites = () => {
 
             const trashImg = document.createElement("div");
             trashImg.setAttribute("alt", "Remove");
+            trashImg.setAttribute("title", "Remove");
             trashImg.classList.add("delete-favorite");
             trashImg.addEventListener("click", handleFavoriteDeleteClick);
 
@@ -105,6 +107,7 @@ export const createListItem = (item) => {
 
     const trashImg = document.createElement("div");
     trashImg.setAttribute("alt", "Remove");
+    trashImg.setAttribute("title", "Remove");
     trashImg.classList.add("delete-item");
     trashImg.addEventListener("click", () => {
         handleRemoveItem(item.id);

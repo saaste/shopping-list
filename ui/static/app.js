@@ -19,6 +19,7 @@ export const setItems = (newItems) => {
         idToItemMap.set(item.id, item);
     });
     redrawShoppingList(items);
+    redrawFavorites(favorites);
 };
 
 export const setFavorites = (newFavorites) => {
@@ -37,5 +38,25 @@ export const setIdToItemMap = (newMap) => {
 }
 
 export const getFavorites = () => {
-    return favorites;
+    let favs = [];
+
+    favLoop: for (let j = 0; j < favorites.length; j++) {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].name.toLowerCase() === favorites[j].toLowerCase()) {
+                continue favLoop;
+            }
+        }
+        favs.push(favorites[j]);
+    }
+
+    return favs;
+}
+
+export const itemExists = (name) => {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].name.toLowerCase() === name.toLowerCase()) {
+            return true;
+        }
+    }
+    return false;
 }
