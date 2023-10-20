@@ -29,6 +29,9 @@ export const initializeUI = () => {
             case "Escape":
                 hideFavorites();
                 break;
+            case "Enter":
+                handleAddNewItem();
+                break;
             default:
                 showFavorites();
                 redrawFavorites();
@@ -38,7 +41,6 @@ export const initializeUI = () => {
 
     addItemButton.addEventListener("click", () => {
         handleAddNewItem();
-        hideFavorites();
     });
 
     uncheckAllButton.addEventListener("click", () => {
@@ -55,6 +57,8 @@ export const initializeUI = () => {
 }
 
 const handleAddNewItem = () => {
+    hideFavorites();
+    
     const input = document.getElementById("new-item-name");
     const itemName = input.value;
 
