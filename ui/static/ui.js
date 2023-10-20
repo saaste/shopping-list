@@ -67,17 +67,12 @@ export const redrawFavorites = () => {
             label.addEventListener("click", handleFavoriteClick);
             li.appendChild(label)
 
-            const trashImg = document.createElement("img");
-            trashImg.setAttribute("src", "/static/trash-can-white.png");
-            trashImg.setAttribute("alt", "Remove")
-            trashImg.classList.add("delete");
-            trashImg.addEventListener("click", handleFavoriteDeleteClick)
-            li.appendChild(trashImg)
+            const trashImg = document.createElement("div");
+            trashImg.setAttribute("alt", "Remove");
+            trashImg.classList.add("delete-favorite");
+            trashImg.addEventListener("click", handleFavoriteDeleteClick);
 
-            // const deleteButton = document.createElement("span")
-            // deleteButton.innerText = "[X]"
-            // deleteButton.addEventListener("click", handleFavoriteDeleteClick);
-            // li.appendChild(deleteButton)
+            li.appendChild(trashImg)
 
             favoritesEl.appendChild(li);
         }
@@ -114,15 +109,6 @@ export const createListItem = (item) => {
     trashImg.addEventListener("click", () => {
         handleRemoveItem(item.id);
     });
-
-
-    // const trashImg = document.createElement("img");
-    // trashImg.setAttribute("src", "/static/trash-can-white.png");
-    // trashImg.setAttribute("alt", "Remove")
-    // trashImg.classList.add("delete");
-    // trashImg.addEventListener("click", () => {
-    //     handleRemoveItem(item.id);
-    // });
 
     let li = document.createElement("li");
     li.setAttribute("draggable", "true")

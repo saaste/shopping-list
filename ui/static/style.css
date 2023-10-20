@@ -207,7 +207,7 @@ input[type="checkbox"]:checked + span {
     text-decoration: line-through;
 }
 
-.delete-item {
+.delete-item, .delete-favorite {
     width: 1.5em;
     height: 1.5em;
     background-image: url("trash-can-white.png");
@@ -219,8 +219,15 @@ input[type="checkbox"]:checked + span {
     opacity: 0.8;
 }
 
+.delete-favorite {
+    align-self: center;
+    margin-right: 1em;
+    width: 1em;
+    height: 1em;
+}
+
 @media (prefers-color-scheme: light) {
-    .delete-item {
+    .delete-item, .delete-favorite {
         background-image: url("trash-can-black.png");
     }
 }
