@@ -16,7 +16,7 @@ I am a backend developer, so here are the things I learned while building the ap
 - Designing for different screen sizes
 - PWA applications
 
-I did not want to use any JavaScript libraries, so everything is implemented using vanilla JavaScript. Yes, it was a painful experience.
+I did not want to use any JavaScript libraries, so everything is implemented using vanilla JavaScript. Yes, it was a painful experience and I'll probably redo this with libraries after the hackathon just to get rid of the mess that is my JavaScript code.
 
 ## Features
 - Real-time updates on all devices using websockets
@@ -27,6 +27,13 @@ I did not want to use any JavaScript libraries, so everything is implemented usi
 - Light and dark mode
 - Mobile friendly
 - PWA support
+
+### Favorites explained
+Every time you add a new item, it becomes a favorite. The app keeps track of how often each item is used. Favorites are sorted by their popularity, showing the top 10 most used items. The list is filtered by the text written in the new item input.
+
+Items that are already on the list are not displayed. If you made a typo or just want to remove a favorite, just click the trash can icon next to it.
+
+Once you have added your most frequently used items as favorites, you can manage the shopping list with very little typing.
 
 ## Setup
 To get started, follow these steps:
