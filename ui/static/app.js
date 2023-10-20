@@ -11,6 +11,10 @@ window.onload = () => {
     initializeWebSocket();
 }
 
+export const getItems = () => {
+    return items;
+}
+
 export const setItems = (newItems) => {
     console.log("Set items to", newItems)
     items = newItems;

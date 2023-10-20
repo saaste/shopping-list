@@ -1,6 +1,6 @@
-import { getFavorites } from "./app.js";
+import { getItems, getFavorites } from "./app.js";
 import { initializeDragSort } from "./dragsort.js";
-import { sendAddItemEvent, sendSetItemStatusEvent, sendRemoveItemEvent, sendRemoveFavoriteEvent } from "./websocket.js";
+import { sendAddItemEvent, sendSetItemStatusEvent, sendRemoveItemEvent, sendRemoveFavoriteEvent, sendSortItemsEvent } from "./websocket.js";
 
 let autoCompleteEl;
 
@@ -8,6 +8,8 @@ export const initializeUI = () => {
     const addItemContainer = document.getElementById("add-new-item-form");
     const addInputEl = document.getElementById("new-item-name");
     const addItemButton = document.getElementById("add-item-button");
+    const uncheckAllButton = document.getElementById("uncheck-all")
+    const deleteAllButton = document.getElementById("delete-all");
 
     autoCompleteEl = document.getElementById("auto-complete");
 
@@ -37,7 +39,19 @@ export const initializeUI = () => {
     addItemButton.addEventListener("click", () => {
         handleAddNewItem();
         hideFavorites();
-    })
+    });
+
+    uncheckAllButton.addEventListener("click", () => {
+        const items = getItems();
+        items.forEach((item) => {
+            item.checked = false;
+        });
+        sendSortItemsEvent(items);
+    });
+
+    deleteAllButton.addEventListener("click", () => {
+        sendSortItemsEvent([]);
+    });
 }
 
 const handleAddNewItem = () => {

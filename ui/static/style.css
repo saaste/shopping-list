@@ -6,6 +6,7 @@
     --dark-text-color: #f1f7f1;
     --dark-extra-bg-color: hsl(233, 15%, 20%);
     --dark-extra-border-color: hsl(233, 15%, 40%);
+    --dark-extra-bg-active-color: hsl(233, 15%, 30%);
     --dark-item-bg-color: hsl(191, 38%, 15%);
     --dark-item-border-color: hsl(191, 38%, 30%);
     --dark-item-bg-hilight-color: hsl(39, 38%, 15%);
@@ -15,6 +16,7 @@
     --light-text-color: #262c37;
     --light-extra-bg-color: #c8bbac;
     --light-extra-border-color: hsl(32, 20%, 43%);
+    --light-extra-bg-active-color: hsl(32, 20%, 83%);
     --light-item-bg-color: hsl(69, 37%, 80%);
     --light-item-border-color: hsl(69, 37%, 40%);
     --light-item-bg-hilight-color: hsl(69, 37%, 50%);
@@ -81,13 +83,19 @@ body {
     width: 2em;
 }
 
+#add-new-item-form button:active {
+    background-color: var(--dark-extra-bg-active-color);
+}
+
 @media (prefers-color-scheme: light) {
     #add-new-item-form button {
         background-color: var(--light-extra-bg-color);
         border: 1px solid var(--light-extra-border-color);
         color: var(--light-text-color);
     }
-
+    #add-new-item-form button:active {
+        background-color: var(--light-extra-bg-active-color);
+    }
 }
 
 #auto-complete {
@@ -95,7 +103,7 @@ body {
     backdrop-filter: blur(3px);
     box-shadow: 0 20px 20px 0 #000;
     position: absolute;
-    top: 3.0em;
+    top: 2.7em;
     left: 0;
     width: 100%;
     max-height: 40vh;
@@ -139,6 +147,39 @@ body {
 
 #auto-complete li:hover {
     background-color: rgba(50, 50, 50, 0.2);
+}
+
+#bulk-actions {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    margin-top: 1em;
+}
+
+#bulk-actions #delete-all {
+    grid-column-start: 3;
+}
+#bulk-actions button {
+    background-color: var(--dark-extra-bg-color);
+    border: 1px solid var(--dark-extra-border-color);
+    color: var(--dark-text-color);
+    font-size: 0.8em;
+    width: auto;
+}
+
+#bulk-actions button:active {
+    background: var(--dark-extra-bg-active-color);
+}
+
+@media (prefers-color-scheme: light) {
+    #bulk-actions button {
+        background-color: var(--light-extra-bg-color);
+        border: 1px solid var(--light-extra-border-color);
+        color: var(--light-text-color);
+        
+    }
+    #bulk-actions button:active {
+        background: var(--light-extra-bg-active-color);
+    }
 }
 
 
