@@ -37,7 +37,6 @@ export const sendRemoveFavoriteEvent = (itemName) => {
 }
 
 const handleWsMessage = (wsMessage) => {
-    console.log("Message from server", wsMessage)
     const message = JSON.parse(wsMessage)
     if (message.type == "LIST_UPDATED") {
         const items = message.body.items;

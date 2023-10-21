@@ -24,7 +24,6 @@ export const initializeUI = () => {
     });
 
     addInputEl.addEventListener("keyup", (e) => {
-        console.log(e.code);
         switch (e.code) {
             case "Escape":
                 hideFavorites();
@@ -69,13 +68,11 @@ const handleAddNewItem = () => {
 }
 
 export const redrawFavorites = () => {
-    console.log("Drawing favorites");
     const searchQuery = document.getElementById("new-item-name").value.toLowerCase();
     const favoritesEl = document.getElementById("favorites");
     favoritesEl.innerHTML = "";
 
     const favorites = getFavorites().slice(0, 10);
-    console.log("Favorites", favorites)
     favorites.forEach((fav) => {
         if (fav.toLowerCase().startsWith(searchQuery)) {
             const li = document.createElement("li");
@@ -180,7 +177,6 @@ const handleFavoriteClick = (e) => {
 }
 
 const handleFavoriteDeleteClick = (e) => {
-    console.log("Deleting favorite");
     const itemName = e.target.previousSibling.innerText;
     sendRemoveFavoriteEvent(itemName);
 

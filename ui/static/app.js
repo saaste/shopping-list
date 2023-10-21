@@ -6,7 +6,6 @@ let idToItemMap = new Map()
 let favorites = [];
 
 window.onload = () => {
-    console.log("Page loaded"); // DEBUG
     initializeUI();
     initializeWebSocket();
 }
@@ -16,7 +15,6 @@ export const getItems = () => {
 }
 
 export const setItems = (newItems) => {
-    console.log("Set items to", newItems)
     items = newItems;
     idToItemMap.clear()
     items.forEach((item) => {
@@ -27,7 +25,6 @@ export const setItems = (newItems) => {
 };
 
 export const setFavorites = (newFavorites) => {
-    console.log("Set favorites to", newFavorites)
     favorites = newFavorites;
     redrawFavorites(favorites);
 }
@@ -37,7 +34,6 @@ export const getItemById = (id) => {
 }
 
 export const setIdToItemMap = (newMap) => {
-    console.log("Set ID to Item Map to", newMap)
     idToItemMap = newMap;
 }
 

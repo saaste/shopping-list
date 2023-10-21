@@ -54,7 +54,7 @@ type Client struct {
 // reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
-		fmt.Printf("readPump done for client %s", c.conn.RemoteAddr().String())
+		// fmt.Printf("readPump done for client %s", c.conn.RemoteAddr().String())
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
@@ -135,7 +135,7 @@ func (c *Client) writePump() {
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel
-				fmt.Printf("Sending CloseMessage for client %+v\n", c)
+				fmt.Printf("Sending CloseMessage to client %s\n", c.conn.RemoteAddr())
 				c.conn.WriteMessage(ws.CloseMessage, []byte{})
 				return
 			}
@@ -145,7 +145,7 @@ func (c *Client) writePump() {
 				log.Printf("failed to get a writer: %v\n", err)
 				return
 			}
-			fmt.Printf("Writing message by client %+v\n", c.conn.RemoteAddr().String())
+			fmt.Printf("Sending message to client %s\n", c.conn.RemoteAddr())
 			fmt.Printf("%s\n\n", message)
 			w.Write(message)
 
@@ -156,7 +156,7 @@ func (c *Client) writePump() {
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(ws.PingMessage, nil); err != nil {
-				log.Printf("failed to write ping message: %v\n", err)
+				log.Printf("failed to send ping message: %v\n", err)
 				return
 			}
 		}

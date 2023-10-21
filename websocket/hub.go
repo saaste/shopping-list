@@ -32,16 +32,15 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			fmt.Printf("registering a client: %+v\n", client)
+			fmt.Printf("registering a client: %s\n", client.conn.RemoteAddr())
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
-				fmt.Printf("unregistering a client: %+v\n", client)
+				fmt.Printf("unregistering a client: %s\n", client.conn.RemoteAddr())
 				delete(h.clients, client)
 				close(client.send)
 			}
 		case message := <-h.broadcast:
-			// fmt.Printf("reading a message from broadcast: %s\n", message)
 			for client := range h.clients {
 				select {
 				case client.send <- message:
@@ -59,9 +58,9 @@ func (h *Hub) Run() {
 
 					}
 
-					// fmt.Printf("Sending message %s to client %+v\n", message, client)
+					// fmt.Printf("Sending message %s to client %s\n", message, client)
 				default:
-					fmt.Printf("closing send channel for client %+v\n", client)
+					fmt.Printf("closing send channel for client %s\n", client.conn.RemoteAddr())
 					close(client.send)
 					delete(h.clients, client)
 				}

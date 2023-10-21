@@ -24,27 +24,22 @@ export const initializeDragSort = () => {
 };
 
 const handleDragStart = (event) => {
-    console.log("drag-start");
     targetEl = event.target;
     targetEl.classList.add("on-drag");
 };
 
 const handleDragEnd = (event) => {
-    console.log("drag-end");
     targetEl.classList.remove("on-drag");
     sendSortedEvent();
 };
 
 const handleDragEnter = (event) => {
-    console.log("drag-enter");
     if (event.target.tagName === "LI") {
-        console.log(targetEl, event.target);
         wrapper.insertBefore(targetEl, event.target);
     }
 };
 
 const handleTouchStart = (event) => {
-    console.log("touch-start");
     defineScope(listElements);
     targetEl = getTouchEventLiElement(event.target);
     itemClip.style.top = event.changedTouches[0].clientY + "px";
@@ -56,7 +51,6 @@ const handleTouchStart = (event) => {
 };
 
 const handleTouchEnd = (event) => {
-    console.log("touch-end");
     itemClip.classList.add("hide");
     targetEl.classList.remove("on-drag");
     sendSortedEvent();
@@ -64,7 +58,6 @@ const handleTouchEnd = (event) => {
 
 const handleTouchMove = (event) => {
     event.preventDefault();
-    console.log("touch-move");
     itemClip.style.top = event.changedTouches[0].clientY + "px";
     itemClip.style.left = event.changedTouches[0].clientX + "px";
     
