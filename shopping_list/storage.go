@@ -14,7 +14,10 @@ type AppData struct {
 }
 
 func LoadAppData() (AppData, error) {
-	appData := AppData{}
+	appData := AppData{
+		ShoppingList: ShoppingList{Items: make([]Item, 0)},
+		Favorites:    Favorites{},
+	}
 
 	jsonFile, err := os.Open("data.json")
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 )
 
 type Favorites struct {
-	Favorites map[string]int `json:"favorites"`
+	Favorites map[string]int `json:"items"`
 }
 
 func (f *Favorites) Update(name string) {
