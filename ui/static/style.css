@@ -196,8 +196,9 @@ body {
     border-radius: 10px;
     margin-bottom: 0.5em;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     gap: 0.5em;
+    transition: all .3s;
 }
 
 @media (prefers-color-scheme: light) {
@@ -230,6 +231,24 @@ body {
     width: 1.2em;
     align-self: center;
     z-index: 99;
+}
+
+#sortable-list li .drag-handle {
+    width: 30px;
+    height: 100%;
+    background-image: url("move-white.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+    padding-left: 1em;
+    margin-left: 1em;
+    cursor: pointer;
+}
+
+@media (prefers-color-scheme: light) {
+    #sortable-list li .drag-handle {
+        background-image: url("move-black.png");
+    }
 }
 
 input[type="checkbox"] {
@@ -301,4 +320,8 @@ input[type="checkbox"]:checked+span {
     .delete-favorite {
         background-image: url("trash-can-black.png");
     }
+}
+
+.hide {
+    display: none;
 }

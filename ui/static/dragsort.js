@@ -1,133 +1,147 @@
 import { getItemById } from "./app.js";
 import { sendSortItemsEvent } from "./websocket.js";
 
-let listElements;
-let targetEl;
-let wrapper;
-let itemClip;
-let scopeObj;
-let touchTimer;
-let isMoving;
-const longTouchDuration = 400;
+let sortableListClass = "sortable-list";
+let listItemClass = "item";
+let dragElementClass = "drag-handle";
+let onDragClass = "on-drag";
+
+let sortableList = null;
+let listItems = null;
+let dragItems = null;
+
+let scrollSpeed = 15;
+let draggedElement = null;
+
+// INITIALIZE
 
 export const initializeDragSort = () => {
-    listElements = document.querySelectorAll(".sortable-list .item");
-    wrapper = document.getElementById("sortable-list");
-    itemClip = document.getElementById("item-clip");
+    sortableList = document.querySelector(`.${sortableListClass}`);
+    sortableList.addEventListener("dragover", handleDragMove);
 
-    listElements.forEach((element) => {
-        element.addEventListener("dragstart", handleDragStart);
-        element.addEventListener("dragend", handleDragEnd);
-        element.addEventListener("dragenter", handleDragEnter);
+    dragItems = sortableList.querySelectorAll(`.${dragElementClass}`);
+    dragItems.forEach((el) => {
+        el.addEventListener("touchstart", handleTouchStart);
+        el.addEventListener("touchend", handleTouchEnd);
+        el.addEventListener("touchmove", handleTouchMove);        
+    });
 
-        element.addEventListener("touchstart", (event) => {
-            if (!touchTimer) {
-                touchTimer = setTimeout(() => {
-                    handleTouchStart(event);
-                }, longTouchDuration);
-            }
-        });
-        element.addEventListener("touchend", handleTouchEnd);
-        element.addEventListener("touchmove", handleTouchMove);
+    listItems = sortableList.querySelectorAll(`.${listItemClass}`);
+    listItems.forEach((el) => {
+        el.addEventListener("dragstart", handleDragStart);
+        el.addEventListener("dragend", handleDragEnd)
+    });
+
+    window.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
     });
 };
 
-const handleDragStart = (event) => {
-    targetEl = event.target;
-    targetEl.classList.add("on-drag");
-};
 
-const handleDragEnd = (event) => {
-    targetEl.classList.remove("on-drag");
+// EVENT HANDLERS
+
+const handleTouchStart = (e) => {
+    e.preventDefault();
+    draggedElement = findDraggedListItem(e.target);
+    draggedElement.classList.add(onDragClass);
+}
+
+const handleTouchEnd = (e) => {
+    draggedElement.classList.remove(onDragClass);
     sendSortedEvent();
-};
+    draggedElement = null;
+}
 
-const handleDragEnter = (event) => {
-    if (event.target.tagName === "LI") {
-        wrapper.insertBefore(targetEl, event.target);
+const handleTouchMove = (e) => {
+    if (draggedElement) {
+        moveDraggedElement(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     }
-};
+}
 
-const handleTouchStart = (event) => {
-    isMoving = true;
-    touchTimer = null;
-    defineScope(listElements);
-    targetEl = getTouchEventLiElement(event.target);
-    itemClip.style.top = event.changedTouches[0].clientY + "px";
-    itemClip.style.left = event.changedTouches[0].clientX + "px";
-    itemClip.innerText = event.target.innerText;
-    itemClip.classList.remove("hide");
-    targetEl.classList.add("on-drag");
-
-};
-
-const handleTouchEnd = (event) => {
-    if (touchTimer) {
-        clearTimeout(touchTimer);
-        touchTimer = null;
+const handleDragStart = (e) => {
+    
+    if (!draggedElement && e.explicitOriginalTarget.classList.contains(dragElementClass)) {
+        draggedElement = findDraggedListItem(e.srcElement);
+        draggedElement.classList.add(onDragClass);
     }
-    if (isMoving) {
-        itemClip.classList.add("hide");
-        targetEl.classList.remove("on-drag");
+}
+
+const handleDragMove = (e) => {
+    if (draggedElement) {
+        e.preventDefault();
+        moveDraggedElement(e.clientX, e.clientY);
+    }
+}
+
+const handleDragEnd = (e) => {
+    if (draggedElement) {
+        draggedElement.classList.remove("on-drag");
         sendSortedEvent();
-        isMoving = false;
-    }
-};
-
-const handleTouchMove = (event) => {
-    if (isMoving) {
-        event.preventDefault();
-        itemClip.style.top = event.changedTouches[0].clientY + "px";
-        itemClip.style.left = event.changedTouches[0].pageY + "px";
-        
-        hitTest(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        draggedElement = null;
     }
 }
 
-const getTouchEventLiElement = (eventTarget) => {
-    if (eventTarget.tagName === "LI") {
-        return eventTarget;
-    }
-    if (eventTarget.tagName === "BODY") {
-        return undefined;
-    }
 
-    return getTouchEventLiElement(eventTarget.parentNode);
+// UTILITY FUNCTIONS
+
+const findDraggedListItem = (element) => {
+    while (element.parentNode) {
+        if (element.classList.contains(listItemClass)) {
+            return element;
+        }
+        element = element.parentNode;
+        console.log(element);
+    }
+    return null;
 }
 
-const hitTest = (thisX, thisY) => {
-    for (let i = 0, max = scopeObj.length; i < max; i++) {
-        if (thisX > scopeObj[i].startX && thisX < scopeObj[i].endX) {
-            if (thisY > scopeObj[i].startY && thisY < scopeObj[i].endY) {
-                wrapper.insertBefore(targetEl, scopeObj[i].target);
-                return;
-            }
+const findListItemOnPosition = (x, y) => {
+    let targetElements = document.elementsFromPoint(x, y);
+    for (let i = 0; i < targetElements.length; i++) {
+        if (targetElements[i].classList.contains(listItemClass)) {
+            return targetElements[i];
         }
     }
-};
+    return null;
+}
 
-const defineScope = (elementArray) => {
-    scopeObj = [];
-    for (let i = 0, max = elementArray.length; i < max; i++) {
-        let newObj = {};
-        newObj.target = elementArray[i];
-        newObj.startX = elementArray[i].offsetLeft;
-        newObj.endX = elementArray[i].offsetLeft + elementArray[i].offsetWidth;
-        newObj.startY = elementArray[i].offsetTop;
-        newObj.endY = elementArray[i].offsetTop + elementArray[i].offsetHeight;
-        scopeObj.push(newObj);
+const moveDraggedElement = (x, y) => {
+    let targetElement = findListItemOnPosition(x, y);
+    if (targetElement) {
+        let elementRect = targetElement.getBoundingClientRect();
+        let elementMidPoint = elementRect.top + (elementRect.bottom - elementRect.top) / 2;
+        let isBelowMidPoint = y > elementMidPoint;
+        if (isBelowMidPoint) {
+            targetElement.after(draggedElement);
+        } else {
+            targetElement.before(draggedElement);
+        }
+        scrollWindowIfNeeded(y);
     }
-};
+}
+
+const scrollWindowIfNeeded = (y) => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.body.scrollHeight;
+    if (windowHeight < documentHeight) {
+        if (y > windowHeight - 50) {
+            window.scrollBy(0, scrollSpeed);
+        }
+        if (y < 50) {
+            window.scrollBy(0, -scrollSpeed);
+        }
+    }   
+;}
 
 const sendSortedEvent = () => {
     const sortedItems = []
-    for (let i = 0; i < wrapper.childElementCount; i++) {
-        const el = wrapper.children.item(i);
-        if (el.getAttribute("draggable") === "true") {
+    for (let i = 0; i < sortableList.childElementCount; i++) {
+        const el = sortableList.children.item(i);
+        if (el.classList.contains(listItemClass)) {
             const itemId = el.getAttribute("data-item-id");
             const item = getItemById(itemId);
-            sortedItems.push(item)
+            sortedItems.push(item);
         }
     }
     sendSortItemsEvent(sortedItems);
-}
+};

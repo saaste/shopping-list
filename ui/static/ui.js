@@ -103,10 +103,6 @@ export const redrawShoppingList = (items) => {
         sortableList.appendChild(createListItem(items[i]));
     }
 
-    const lastItem = document.createElement("li");
-    lastItem.classList.add("item");
-    sortableList.appendChild(lastItem);
-
     initializeDragSort();
 };
 
@@ -127,6 +123,9 @@ export const createListItem = (item) => {
     trashImg.addEventListener("click", () => {
         handleRemoveItem(item.id);
     });
+
+    const dragHandle = document.createElement("div");
+    dragHandle.classList.add("drag-handle");
 
     let li = document.createElement("li");
     li.setAttribute("draggable", "true")
@@ -154,6 +153,7 @@ export const createListItem = (item) => {
     li.appendChild(checkbox);
     li.appendChild(label);
     li.appendChild(trashImg);
+    li.appendChild(dragHandle);
 
     return li;
 };
