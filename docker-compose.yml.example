@@ -5,6 +5,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+    environment:
+      - SHOPPING_LIST_PASSWORD=changeme
     volumes:
       - ./data.json:/app/data.json
     ports:

@@ -7,4 +7,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 )
 
-require github.com/google/uuid v1.3.1 // indirect
+require (
+	github.com/google/uuid v1.3.1 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+)

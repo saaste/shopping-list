@@ -6,8 +6,10 @@ let idToItemMap = new Map()
 let favorites = [];
 
 window.onload = () => {
-    initializeUI();
-    initializeWebSocket();
+    if (document.getElementById("add-new-item-form")) {
+        initializeUI();
+        initializeWebSocket();
+    }
 }
 
 export const getItems = () => {

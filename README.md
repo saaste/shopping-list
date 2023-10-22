@@ -37,12 +37,11 @@ Once you have added your most frequently used items as favorites, you can manage
 
 ## Setup
 To get started, follow these steps:
-1. Clone the respository with
-```
-git clone https://github.com/saaste/shopping-list.git
-```
+1. Clone the respository with `git clone https://github.com/saaste/shopping-list.git`
 2. Copy docker-compose.yml.example ➔ docker-compose.yml
-3. [Optional] Add customer styles to `ui/static/custom.css`.
+3. Copy data.json.example ➔ data.json
+4. Set a password by replacing `changeme` in `docker-compose.yml`
+5. [Optional] Add customer styles to `ui/static/custom.css`.
 
 
 ## How to run

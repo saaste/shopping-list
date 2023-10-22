@@ -325,3 +325,10 @@ input[type="checkbox"]:checked+span {
 .hide {
     display: none;
 }
+
+#footer {
+    border-top: 1px solid var(--dark-extra-border-color);
+    font-size: 0.8em;
+    text-align: center;
+    padding-top: 1em;
+}
