@@ -6,6 +6,9 @@ let targetEl;
 let wrapper;
 let itemClip;
 let scopeObj;
+let touchTimer;
+let isMoving;
+const longTouchDuration = 400;
 
 export const initializeDragSort = () => {
     listElements = document.querySelectorAll(".sortable-list .item");
@@ -17,7 +20,13 @@ export const initializeDragSort = () => {
         element.addEventListener("dragend", handleDragEnd);
         element.addEventListener("dragenter", handleDragEnter);
 
-        element.addEventListener("touchstart", handleTouchStart);
+        element.addEventListener("touchstart", (event) => {
+            if (!touchTimer) {
+                touchTimer = setTimeout(() => {
+                    handleTouchStart(event);
+                }, longTouchDuration);
+            }
+        });
         element.addEventListener("touchend", handleTouchEnd);
         element.addEventListener("touchmove", handleTouchMove);
     });
@@ -40,6 +49,8 @@ const handleDragEnter = (event) => {
 };
 
 const handleTouchStart = (event) => {
+    isMoving = true;
+    touchTimer = null;
     defineScope(listElements);
     targetEl = getTouchEventLiElement(event.target);
     itemClip.style.top = event.changedTouches[0].clientY + "px";
@@ -51,17 +62,26 @@ const handleTouchStart = (event) => {
 };
 
 const handleTouchEnd = (event) => {
-    itemClip.classList.add("hide");
-    targetEl.classList.remove("on-drag");
-    sendSortedEvent();
+    if (touchTimer) {
+        clearTimeout(touchTimer);
+        touchTimer = null;
+    }
+    if (isMoving) {
+        itemClip.classList.add("hide");
+        targetEl.classList.remove("on-drag");
+        sendSortedEvent();
+        isMoving = false;
+    }
 };
 
 const handleTouchMove = (event) => {
-    event.preventDefault();
-    itemClip.style.top = event.changedTouches[0].clientY + "px";
-    itemClip.style.left = event.changedTouches[0].clientX + "px";
-    
-    hitTest(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+    if (isMoving) {
+        event.preventDefault();
+        itemClip.style.top = event.changedTouches[0].clientY + "px";
+        itemClip.style.left = event.changedTouches[0].pageY + "px";
+        
+        hitTest(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+    }
 }
 
 const getTouchEventLiElement = (eventTarget) => {
