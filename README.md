@@ -48,7 +48,7 @@ To get started, follow these steps:
 ### How to run with Go
 The only requirement is [Go](https://go.dev/). You can start the app with:
 ```
-go run . [--port PORT]
+SHOPPING_LIST_PASSWORD=changeme go run . [--port PORT]
 ```
 By default the app will run on port 8000.
 

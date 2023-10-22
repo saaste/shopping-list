@@ -2,16 +2,20 @@ import { getItems, getFavorites } from "./app.js";
 import { initializeDragSort } from "./dragsort.js";
 import { sendAddItemEvent, sendSetItemStatusEvent, sendRemoveItemEvent, sendRemoveFavoriteEvent, sendSortItemsEvent } from "./websocket.js";
 
+let addInputEl;
 let autoCompleteEl;
+let favoritesEl;
+let selectedFavoriteIndex = -1;
 
 export const initializeUI = () => {
     const addItemContainer = document.getElementById("add-new-item-form");
-    const addInputEl = document.getElementById("new-item-name");
     const addItemButton = document.getElementById("add-item-button");
     const uncheckAllButton = document.getElementById("uncheck-all")
     const deleteAllButton = document.getElementById("delete-all");
 
+    addInputEl = document.getElementById("new-item-name");
     autoCompleteEl = document.getElementById("auto-complete");
+    favoritesEl = document.getElementById("favorites");
 
     document.body.addEventListener("click", (e) => {
         if (e.target === document.body) {
@@ -29,7 +33,13 @@ export const initializeUI = () => {
                 hideFavorites();
                 break;
             case "Enter":
-                handleAddNewItem();
+                handleFavoriteEnter();
+                break;
+            case "ArrowDown":
+                selectNextFavorite();
+                break;
+            case "ArrowUp":
+                selectPreviousFavorite();
                 break;
             default:
                 showFavorites();
@@ -57,7 +67,7 @@ export const initializeUI = () => {
 
 const handleAddNewItem = () => {
     hideFavorites();
-    
+
     const input = document.getElementById("new-item-name");
     const itemName = input.value;
 
@@ -76,6 +86,9 @@ export const redrawFavorites = () => {
     favorites.forEach((fav) => {
         if (fav.toLowerCase().startsWith(searchQuery)) {
             const li = document.createElement("li");
+            li.addEventListener("mouseenter", () => {
+                resetSelectedFavorite();
+            });
 
 
             const label = document.createElement("span")
@@ -94,6 +107,10 @@ export const redrawFavorites = () => {
             favoritesEl.appendChild(li);
         }
     });
+    resetSelectedFavorite();
+    if (document.activeElement === addInputEl) {
+        showFavorites();
+    }
 }
 
 export const redrawShoppingList = (items) => {
@@ -168,8 +185,6 @@ const handleRemoveItem = (itemId) => {
 
 const handleFavoriteClick = (e) => {
     const value = e.target.innerText;
-
-    const addInputEl = document.getElementById("new-item-name");
     addInputEl.value = value;
 
     handleAddNewItem(value);
@@ -180,8 +195,16 @@ const handleFavoriteDeleteClick = (e) => {
     const itemName = e.target.previousSibling.innerText;
     sendRemoveFavoriteEvent(itemName);
 
-    const addInputEl = document.getElementById("new-item-name");
     addInputEl.focus();
+}
+
+const handleFavoriteEnter = () => {
+    if (selectedFavoriteIndex > -1) {
+        let selectedFavorite = favoritesEl.childNodes[selectedFavoriteIndex].childNodes[0].innerText;
+        addInputEl.value = selectedFavorite
+    }
+    handleAddNewItem();
+    resetSelectedFavorite();
 }
 
 const showFavorites = () => {
@@ -192,4 +215,47 @@ const showFavorites = () => {
 const hideFavorites = () => {
     autoCompleteEl = document.getElementById("auto-complete");
     autoCompleteEl.classList.add("hide");
+}
+
+const selectNextFavorite = () => {
+    let favorites = favoritesEl.childNodes
+    if (favorites.length === 0) {
+        selectedFavoriteIndex = -1;
+        return;
+    }
+
+    if (selectedFavoriteIndex === -1) {
+        selectedFavoriteIndex = 0;
+    } else if (selectedFavoriteIndex < favorites.length - 1) {
+        selectedFavoriteIndex += 1;
+    }
+
+    let selected = favoritesEl.querySelectorAll(".selected");
+    selected.forEach((el) => el.classList.remove("selected"));
+
+    favorites[selectedFavoriteIndex].classList.add("selected");
+}
+
+const selectPreviousFavorite = () => {
+    let favorites = favoritesEl.childNodes
+    if (favorites.length === 0 || selectedFavoriteIndex < 0) {
+        selectedFavoriteIndex = -1;
+        return;
+    }
+
+    let selected = favoritesEl.querySelectorAll(".selected");
+    selected.forEach((el) => el.classList.remove("selected"));
+
+    if (selectedFavoriteIndex === 0) {
+        selectedFavoriteIndex = -1;
+    } else {
+        selectedFavoriteIndex -= 1;
+        favorites[selectedFavoriteIndex].classList.add("selected");
+    }
+}
+
+const resetSelectedFavorite = () => {
+    let selected = favoritesEl.querySelectorAll(".selected");
+    selected.forEach((el) => el.classList.remove("selected"));
+    selectedFavoriteIndex = -1;
 }

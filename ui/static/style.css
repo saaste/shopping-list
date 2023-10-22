@@ -145,7 +145,7 @@ body {
     align-self: center;
 }
 
-#auto-complete li:hover {
+#auto-complete li:hover, #auto-complete li.selected {
     background-color: rgba(50, 50, 50, 0.2);
 }
 

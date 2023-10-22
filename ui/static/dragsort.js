@@ -32,9 +32,10 @@ export const initializeDragSort = () => {
         el.addEventListener("dragend", handleDragEnd)
     });
 
-    window.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-    });
+    // Uncomment to disable context menu in mobile emulator
+    // window.addEventListener("contextmenu", (e) => {
+    //     e.preventDefault();
+    // });
 };
 
 
