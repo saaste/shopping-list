@@ -1,6 +1,6 @@
 # Shopping List
 
-A simple shopping list application written in [Go](https://go.dev/) that allows multiple users to edit the list at the same time.
+A simple shopping list application written in [Go](https://go.dev/) that allows multiple users to edit the list at the same time with real-time updates.
 
 ## Background
 My partner and I used to manage our own shopping lists in different apps. Before one of us went to shopping, we had to check with the other to see if there is was anything to add to the list. And if one of us was already at the store, we had to call or text if we wanted to make sure we got the items missing from the list.
@@ -16,7 +16,7 @@ I am a backend developer, so here are the things I learned while building the ap
 - Designing for different screen sizes
 - PWA applications
 
-I did not want to use any JavaScript libraries, so everything is implemented using vanilla JavaScript. Yes, it was a painful experience. So painful, that I ended up creating an [example repository](https://github.com/saaste/sortable-list-example) so that you don't have to feel the same agony.
+I did not want to use any JavaScript libraries, so everything is implemented using vanilla JavaScript. Yes, it was a painful experience. Figuring out drag and drop was so painful that I created a [working example](https://github.com/saaste/sortable-list-example) so that you don't have to feel the same agony.
 
 ## Features
 - Real-time updates on all devices using websockets
