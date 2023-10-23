@@ -60,10 +60,12 @@ const handleTouchMove = (e) => {
 }
 
 const handleDragStart = (e) => {
-    
-    if (!draggedElement && e.explicitOriginalTarget.classList.contains(dragElementClass)) {
-        draggedElement = findDraggedListItem(e.srcElement);
+    let elementFromCursor = document.elementFromPoint(e.clientX, e.clientY);
+    if (!draggedElement && elementFromCursor.classList.contains(dragElementClass)) {
+        draggedElement = e.target;
         draggedElement.classList.add(onDragClass);
+    } else {
+        e.preventDefault();
     }
 }
 
