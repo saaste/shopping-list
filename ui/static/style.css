@@ -265,6 +265,8 @@ input[type="checkbox"] {
 
     display: grid;
     place-content: center;
+
+    cursor: pointer;
 }
 
 input[type="checkbox"]::before {
@@ -301,6 +303,7 @@ input[type="checkbox"]:checked+span {
     background-repeat: no-repeat;
     background-size: contain;
     opacity: 0.5;
+    cursor: pointer;
 }
 
 .delete-item:hover {

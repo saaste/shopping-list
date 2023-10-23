@@ -42,7 +42,6 @@ export const initializeUI = () => {
                 selectPreviousFavorite();
                 break;
             default:
-                showFavorites();
                 redrawFavorites();
                 break;
         }
@@ -107,6 +106,7 @@ export const redrawFavorites = () => {
             favoritesEl.appendChild(li);
         }
     });
+
     resetSelectedFavorite();
     if (document.activeElement === addInputEl) {
         showFavorites();
@@ -209,7 +209,11 @@ const handleFavoriteEnter = () => {
 
 const showFavorites = () => {
     autoCompleteEl = document.getElementById("auto-complete");
-    autoCompleteEl.classList.remove("hide");
+    if (favoritesEl.childElementCount > 0) {
+        autoCompleteEl.classList.remove("hide");
+    } else {
+        autoCompleteEl.classList.add("hide");
+    }
 }
 
 const hideFavorites = () => {

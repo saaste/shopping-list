@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"text/template"
 
@@ -15,6 +14,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/saaste/shopping-list/shopping_list"
 	"github.com/saaste/shopping-list/websocket"
 )
 
@@ -24,11 +24,12 @@ func main() {
 	port := flag.String("port", "8000", "Port")
 	flag.Parse()
 
-	envPassword, exist := os.LookupEnv("SHOPPING_LIST_PASSWORD")
-	if !exist {
-		log.Fatalf("SHOPPING_LIST_PASSWORD env not set")
+	appConfig, err := shopping_list.LoadAppConfig()
+	if err != nil {
+		log.Fatalf("failed to load app config: %v", err)
 	}
-	requiredPassword = envPassword
+
+	requiredPassword = appConfig.Password
 
 	hub := websocket.NewHub()
 	go hub.Run()
@@ -40,12 +41,17 @@ func main() {
 	r.Post("/login", handleLogin)
 	r.Get("/logout", handleLogout)
 	r.Get("/ws", func(w http.ResponseWriter, r *http.Request) {
+		if !appConfig.IsValidOrigin(r.Header.Get("Origin")) || !isValidAuthCookie(r) {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+
 		websocket.ServeWs(hub, w, r)
 	})
 
 	fileServer(r, "/static", http.Dir("ui/static"))
 
-	err := http.ListenAndServe(fmt.Sprintf(":%s", *port), r)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", *port), r)
 	if errors.Is(err, http.ErrServerClosed) {
 		log.Println("Server closed")
 	} else if err != nil {

@@ -79,6 +79,8 @@ func (c *Client) readPump() {
 			log.Printf("failed getting message type from %s: %v\n", string(message), err)
 		}
 
+		fmt.Printf("Received %s message from %s\n%s\n\n", messageType, c.conn.RemoteAddr(), message)
+
 		switch messageType {
 		case MessageTypeInitial:
 			err := c.handleInitialMessage()
@@ -339,6 +341,9 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
+	fmt.Printf("Origin header: %s\n\n", r.Header.Get("Origin"))
+
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
 
