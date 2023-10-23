@@ -146,7 +146,8 @@ body {
 }
 
 #auto-complete li:hover, #auto-complete li.selected {
-    background-color: rgba(50, 50, 50, 0.2);
+    background-color: rgba(50, 50, 50, 0.4);
+    text-shadow: 0 0 5px #fff;
 }
 
 #bulk-actions {
@@ -212,7 +213,7 @@ body {
 
 #sortable-list li.on-drag {
     background-color: var(--dark-item-bg-hilight-color);
-    transform: scale(1.05, 1.1);
+    transform: scale(1.03, 1.03);
     opacity: 1;
     box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 }
@@ -254,7 +255,6 @@ body {
 input[type="checkbox"] {
     appearance: none;
     margin: 0;
-
     font: inherit;
     color: currentColor;
     width: 1.15em;
@@ -262,10 +262,8 @@ input[type="checkbox"] {
     border: 0.1em solid currentColor;
     border-radius: 0.25em;
     transform: translateY(0.18em);
-
     display: grid;
     place-content: center;
-
     cursor: pointer;
 }
 
@@ -306,7 +304,7 @@ input[type="checkbox"]:checked+span {
     cursor: pointer;
 }
 
-.delete-item:hover {
+.delete-item:hover, .drag-handle:hover {
     opacity: 0.8;
 }
 

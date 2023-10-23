@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -41,7 +42,7 @@ func main() {
 	r.Post("/login", handleLogin)
 	r.Get("/logout", handleLogout)
 	r.Get("/ws", func(w http.ResponseWriter, r *http.Request) {
-		if !appConfig.IsValidOrigin(r.Header.Get("Origin")) || !isValidAuthCookie(r) {
+		if !appConfig.IsValidOrigin(r) || !isValidAuthCookie(r) {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
@@ -106,7 +107,8 @@ func handleLogout(w http.ResponseWriter, r *http.Request) {
 		Name:     "auth",
 		Value:    "",
 		Path:     "/",
-		MaxAge:   -1,
+		MaxAge:   0,
+		Expires:  time.Unix(0, 0),
 		HttpOnly: true,
 		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
@@ -139,13 +141,19 @@ func isValidAuthCookie(r *http.Request) bool {
 	if err != nil {
 		switch {
 		case errors.Is(err, http.ErrNoCookie):
-			log.Printf("auth cookie not found")
+			log.Printf("Warning: auth cookie not found.\n")
 		default:
-			log.Printf("failed to get auth cookie: %v", err)
+			log.Printf("Warning: failed to get auth cookie: %v", err)
 		}
+		return false
 	}
 
-	return cookie != nil && isValidPassword(requiredPassword, cookie.Value)
+	isValid := isValidPassword(requiredPassword, cookie.Value)
+	if !isValid {
+		fmt.Printf("Warning: invalid auth cookie from %s: %s", r.RemoteAddr, cookie.Value)
+	}
+
+	return cookie != nil && isValid
 }
 
 func setAuthCookie(w http.ResponseWriter) {

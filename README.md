@@ -15,6 +15,8 @@ I am a backend developer, so here are the things I learned while building the ap
 - Light and dark mode detection and handling
 - Designing for different screen sizes
 - PWA applications
+- JavaScript modules
+- Accessibility features with aria tags
 
 I did not want to use any JavaScript libraries, so everything is implemented using vanilla JavaScript. Yes, it was a painful experience. Figuring out drag and drop was so painful that I created a [working example](https://github.com/saaste/sortable-list-example) so that you don't have to feel the same agony.
 

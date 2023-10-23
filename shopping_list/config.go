@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"strings"
 )
 
 type AppConfig struct {
@@ -32,11 +34,13 @@ func LoadAppConfig() (AppConfig, error) {
 	return appConfig, nil
 }
 
-func (c *AppConfig) IsValidOrigin(origin string) bool {
+func (c *AppConfig) IsValidOrigin(r *http.Request) bool {
+	origin := r.Header.Get("Origin")
 	for _, o := range c.AllowedOrigins {
 		if origin == o {
 			return true
 		}
 	}
+	fmt.Printf("Warning: invalid origin detected from %s. Origin: %s. Allowed values: [ %s ]\n", r.RemoteAddr, origin, strings.Join(c.AllowedOrigins, ", "))
 	return false
 }

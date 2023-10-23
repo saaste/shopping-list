@@ -12,6 +12,7 @@ export const initializeUI = () => {
     const addItemButton = document.getElementById("add-item-button");
     const uncheckAllButton = document.getElementById("uncheck-all")
     const deleteAllButton = document.getElementById("delete-all");
+    const bulkButtons = document.querySelectorAll("#bulk-actions button");
 
     addInputEl = document.getElementById("new-item-name");
     autoCompleteEl = document.getElementById("auto-complete");
@@ -61,6 +62,12 @@ export const initializeUI = () => {
 
     deleteAllButton.addEventListener("click", () => {
         sendSortItemsEvent([]);
+    });
+
+    bulkButtons.forEach((el) => {
+        el.addEventListener("focus", () => {
+            hideFavorites();
+        });
     });
 }
 
@@ -126,16 +133,22 @@ export const redrawShoppingList = (items) => {
 export const createListItem = (item) => {
     let checkbox = document.createElement("input");
     checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("aria-label", "Collected");
     checkbox.addEventListener("click", () => {
         handleToggleCheckbox(item.id, !item.checked);
-    })
+    });
+    checkbox.addEventListener("focus", () => {
+        hideFavorites();
+    });
     if (item.checked) {
         checkbox.setAttribute("checked", "checked");
     }
 
     const trashImg = document.createElement("div");
-    trashImg.setAttribute("alt", "Remove");
-    trashImg.setAttribute("title", "Remove");
+    trashImg.setAttribute("alt", `Remove ${item.name}`);
+    trashImg.setAttribute("title", `Remove ${item.name}`);
+    trashImg.setAttribute("role", "button")
+    trashImg.setAttribute("aria-label", `Remove ${item.name}`);
     trashImg.classList.add("delete-item");
     trashImg.addEventListener("click", () => {
         handleRemoveItem(item.id);
@@ -143,6 +156,10 @@ export const createListItem = (item) => {
 
     const dragHandle = document.createElement("div");
     dragHandle.classList.add("drag-handle");
+    dragHandle.setAttribute("title", `Move ${item.name}`);
+    dragHandle.setAttribute("role", "button");
+    dragHandle.setAttribute("aria-label", `Move ${item.name}`);
+
 
     let li = document.createElement("li");
     li.setAttribute("draggable", "true")
@@ -156,16 +173,16 @@ export const createListItem = (item) => {
     });
     li.addEventListener("touchstart", () => {
         setTimeout(() => li.classList.add("dragging"), 0);
-    })
+    });
     li.addEventListener("dragend", () => {
         li.classList.remove("dragging");
-    })
+    });
     li.addEventListener("touchend", () => {
         li.classList.remove("dragging");
-    })
+    });
 
-    const label = document.createElement("span")
-    label.innerHTML = item.name
+    const label = document.createElement("span");
+    label.innerHTML = item.name;
 
     li.appendChild(checkbox);
     li.appendChild(label);
