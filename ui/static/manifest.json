@@ -23,7 +23,7 @@
             "sizes": "96x96"
         },
         {
-            "src": "/static/icons/icon-144x144png",
+            "src": "/static/icons/icon-144x144.png",
             "type": "image/png",
             "sizes": "144x144"
         },
