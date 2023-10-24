@@ -1,0 +1,33 @@
+{{ define "content" }}
+
+<section id="add-new-item-form" role="form" aria-label="Add a new item">
+    <label class="hide" for="new-item-name">Item name</label>
+    <input type="text" id="new-item-name" placeholder="Add a new item" />
+    <button type="button" id="add-item-button" arial-label="Add">
+        +
+    </button>
+    <div id="auto-complete" class="hide">
+        <ul id="favorites">
+
+        </ul>
+    </div>
+</section>
+
+<section arial-label="Shopping list">
+    <div id="bulk-actions" role="form">
+        <button id="uncheck-all">Uncheck all</button>
+        <button id="delete-all">Delete all</button>
+    </div>
+
+    <div id="shopping-list">
+        <ul id="sortable-list" class="sortable-list">
+
+        </ul>
+    </div>
+</section>
+
+<footer id="footer">
+    <a href="/logout">Log out</a>
+</footer>
+
+{{ end }}
