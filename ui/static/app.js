@@ -1,15 +1,30 @@
 import { initializeUI, redrawFavorites, redrawShoppingList } from "./ui.js"
-import { initializeWebSocket } from "./websocket.js";
+import { initializeWebSocket, sendInitEvent } from "./websocket.js";
 
 let items = [];
 let idToItemMap = new Map()
 let favorites = [];
+let lastUpdate = 0;
+let updateTimer = null;
 
 window.onload = () => {
     if (document.getElementById("add-new-item-form")) {
         initializeUI();
         initializeWebSocket();
+        updateTimer = setInterval(forceRefresh, 1000);
     }
+}
+
+const forceRefresh = () => {
+    const lastUpdateDiff = Date.now() - lastUpdate;
+    const maxLastUpdate = 1000 * 60 * 5;
+    if (lastUpdateDiff > maxLastUpdate) {
+        sendInitEvent();
+    }
+}
+
+export const updateLastUpdate = () => {
+    lastUpdate = Date.now();
 }
 
 export const getItems = () => {

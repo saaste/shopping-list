@@ -1,5 +1,5 @@
 
-import { setItems, setFavorites } from "./app.js";
+import { setItems, setFavorites, updateLastUpdate } from "./app.js";
 
 let socket;
 let eventQueue = [];
@@ -11,7 +11,7 @@ export const initializeWebSocket = () => {
     socket.addEventListener("open", (event) => {
         console.debug("Websocket opened")
         if (eventQueue.length === 0) {
-            socket.send(JSON.stringify({"type": "INITIAL"}));
+            sendInitEvent();
         } else {
             while (eventQueue.length > 0) {
                 sendEvent(eventQueue.pop());
@@ -31,6 +31,10 @@ export const initializeWebSocket = () => {
         console.error("Websocket error:", event);
     });
 };
+
+export const sendInitEvent = () => {
+    sendEvent({"type": "INITIAL"});
+}
 
 export const sendAddItemEvent = (itemName) => {
     sendEvent({"type": "ADD_ITEM", "name": itemName});
@@ -67,8 +71,10 @@ const handleWsMessage = (wsMessage) => {
     if (message.type == "LIST_UPDATED") {
         const items = message.body.items;
         setItems(items);
+        updateLastUpdate();
     }
     if (message.type == "FAVORITES_UPDATED") {
         setFavorites(message.body);
+        updateLastUpdate();
     }
 }
